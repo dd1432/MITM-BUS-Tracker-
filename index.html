@@ -41,6 +41,14 @@
     text-align: center;
     line-height: 50px; /* centers the emoji */
   }
+    .stop-label {
+  opacity: 0.5;       /* makes text transparent */
+  font-size: 12px;    /* adjust size */
+  font-weight: bold;  /* optional */
+  background: none;   /* removes white background */
+  border: none;       /* removes border */
+  box-shadow: none;   /* removes shadow */
+}
   </style>
 </head>
 <body>
@@ -135,7 +143,12 @@
         fillColor: 'white',
         fillOpacity: 1
       })  .addTo(map)
-  .bindTooltip(stop, { permanent: true, direction: 'right', offset: [8, 0] }) // always visible
+ .bindTooltip(stop, { 
+    permanent: true, 
+    direction: 'right', 
+    offset: [8, 0], 
+    className: 'stop-label'  // custom CSS class
+  })
   .openTooltip();
 });
 
@@ -162,5 +175,6 @@
   </script>
 </body>
 </html>
+
 
 

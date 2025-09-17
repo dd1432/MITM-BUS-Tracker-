@@ -49,6 +49,7 @@
   border: none;       /* removes border */
   box-shadow: none;   /* removes shadow */
 }
+    
   </style>
 </head>
 <body>
@@ -153,28 +154,57 @@
 });
 
 
-    // Bus marker
-    let busMarker = null;
+  // Bus marker
+let busMarker = null;
+let lastCoords = null; // 👈 store previous coords
 
-    firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
-      const stop = snapshot.val();
-      if (stop && stops[stop]) {
-        const coords = stops[stop];
-        if (busMarker) {
-          busMarker.setLatLng(coords);
-        } else {
-          busMarker = L.marker(coords, {
-            icon: L.divIcon({ className: "bus-icon", html: "🚌", iconSize: [30, 30] })
-          }).addTo(map);
+firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
+  const stop = snapshot.val();
+  if (stop && stops[stop]) {
+    const coords = stops[stop];
+
+    if (busMarker) {
+      busMarker.setLatLng(coords);
+
+      // 🔹 Calculate direction and rotate
+      if (lastCoords) {
+        const angle = Math.atan2(
+          coords[1] - lastCoords[1],
+          coords[0] - lastCoords[0]
+        ) * (180 / Math.PI);
+
+        const iconEl = busMarker.getElement();
+        if (iconEl) {
+          iconEl.style.transform = `rotate(${angle}deg)`;
         }
-   map.setView(coords, 14);
       }
- 
-    });
-    
+    } else {
+      busMarker = L.marker(coords, {
+        icon: L.divIcon({
+          className: "bus-icon",
+          html: "🚌",
+          iconSize: [30, 30]
+        })
+      }).addTo(map);
+
+      // Smooth animation
+      const iconEl = busMarker.getElement();
+      if (iconEl) {
+        iconEl.style.transition = "transform 0.6s linear";
+      }
+    }
+
+    // Save coords for next update
+    lastCoords = coords;
+
+    map.setView(coords, 14);
+  }
+});
+
   </script>
 </body>
 </html>
+
 
 
 

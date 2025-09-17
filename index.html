@@ -156,7 +156,6 @@
 
   // Bus marker
 let busMarker = null;
-let lastCoords = null; // 👈 store previous coords
 
 firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
   const stop = snapshot.val();
@@ -165,19 +164,6 @@ firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
 
     if (busMarker) {
       busMarker.setLatLng(coords);
-
-      // 🔹 Calculate direction and rotate
-      if (lastCoords) {
-        const angle = Math.atan2(
-          coords[1] - lastCoords[1],
-          coords[0] - lastCoords[0]
-        ) * (180 / Math.PI);
-
-        const iconEl = busMarker.getElement();
-        if (iconEl) {
-          iconEl.style.transform = `rotate(${angle}deg)`;
-        }
-      }
     } else {
       busMarker = L.marker(coords, {
         icon: L.divIcon({
@@ -194,9 +180,6 @@ firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
       }
     }
 
-    // Save coords for next update
-    lastCoords = coords;
-
     map.setView(coords, 14);
   }
 });
@@ -204,6 +187,7 @@ firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
   </script>
 </body>
 </html>
+
 
 
 

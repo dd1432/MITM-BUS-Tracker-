@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MITM Bus Coordinator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4ff;
+      text-align: center;
+      padding: 20px;
+    }
+    header img {
+      width: 120px;
+      margin-bottom: 10px;
+    }
+    h1 { color: #003366; }
+    select, button {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #003366;
+    }
+    button {
+      background: #003366;
+      color: white;
+	
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://mitm.ac.in/assets/header/mitm_logo.png" alt="MITM Logo">
+    <h1>MITM College Bus Coordinator</h1>
+  </header>
+
+  <p>Update the bus stop when bus reaches.</p>
+
+  <select id="stopSelect">
+    <option>Not Started Yet</option>
+    <option>SRM college circle - 9:00 AM</option>
+    <option>Police Station</option>
+    <option>Ambedkar Chowk - 9:05 AM</option>
+    <option>Gulmohar Hotel - 9:06 AM</option>
+    <option>Belnadi - 9:07 AM</option>
+    <option>Pawshi - 9:09 AM</option>
+    <option>Bambarde - 9:12 AM</option>
+    <option>Pandur</option>
+    <option>Jijamata - 9:17 AM</option>
+    <option>Oros Stand - 9:40 AM</option>
+    <option>ZP office - 9:41 AM</option>
+    <option>Padte Dukan - 9:45 AM</option>
+    <option>Sukalwad - 9:47 AM</option>
+    <option>MITM - 9:55 AM</option>
+  </select>
+  <button onclick="updateStop()">Update</button>
+
+  <!-- Firebase v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA86llWq52ezXRUiwruFGgd5VIRE1Jm_YQ",
+      authDomain: "college-bus-tracker-a8bff.firebaseapp.com",
+      databaseURL: "https://college-bus-tracker-a8bff-default-rtdb.firebaseio.com",
+      projectId: "college-bus-tracker-a8bff",
+      storageBucket: "college-bus-tracker-a8bff.appspot.com",
+      messagingSenderId: "217946135382",
+      appId: "1:217946135382:web:d163cf827ff63a022154f7"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function updateStop() {
+      const stop = document.getElementById("stopSelect").value;
+      firebase.database().ref("bus/currentStop").set(stop);
+    }
+  </script>
+</body>
+</html>

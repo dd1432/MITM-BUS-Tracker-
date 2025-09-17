@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MITM Bus Live Tracker</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      text-align: center;
+    }
+  header {
+      background:#003366; color:white; padding:15px;
+      display:flex; align-items:center; justify-content:center; gap:15px;
+      box-shadow:0 3px 6px rgba(0,0,0,0.2);
+    }
+  header img {
+    height: 60px;
+  }
+  header .title {
+    display: flex;
+    flex-direction: column; /* stack h1 and h2 in separate lines */
+  }
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+  }
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
+.bus-icon {
+    font-size: 35px;
+    text-align: center;
+    line-height: 50px; /* centers the emoji */
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://mitm.ac.in/assets/header/mitm_logo.png" alt="MITM Logo">
+    <div class="title">
+    <h1>Metropolitan Institute of Technology and Management</h1>
+    <h2>College Bus Live Tracker</h2>
+  </div>
+  </header>
+  
+  <div id="map"></div>
+
+  <!-- Leaflet + Firebase -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyA86llWq52ezXRUiwruFGgd5VIRE1Jm_YQ",
+      authDomain: "college-bus-tracker-a8bff.firebaseapp.com",
+      databaseURL: "https://college-bus-tracker-a8bff-default-rtdb.firebaseio.com",
+      projectId: "college-bus-tracker-a8bff",
+      storageBucket: "college-bus-tracker-a8bff.appspot.com",
+      messagingSenderId: "217946135382",
+      appId: "1:217946135382:web:d163cf827ff63a022154f7"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Stops with coordinates
+    const stops = {
+      "Not Started Yet": null,
+      "SRM college circle - 9:00 AM": [16.002758, 73.690182],
+      "Police Station": [16.005456, 73.687071],
+      "Ambedkar Chowk - 9:05 AM": [16.013139, 73.685517],
+      "Gulmohar Hotel - 9:06 AM": [16.015775, 73.690378],
+      "Belnadi - 9:07 AM": [16.017020, 73.695487],
+      "Pawshi - 9:09 AM": [16.028396, 73.699633],
+      "Bambarde - 9:12 AM": [16.048672, 73.705323],
+      "Pandur": [16.068645, 73.709111],
+      "Jijamata - 9:17 AM": [16.103614, 73.708746],
+      "Oros Stand - 9:40 AM": [16.117025, 73.703931],
+      "ZP office - 9:41 AM": [16.114360, 73.698258],
+      "Padte Dukan - 9:45 AM": [16.113896, 73.672320],
+      "Sukalwad - 9:47 AM": [16.109731, 73.666286],
+      "MITM - 9:55 AM": [16.105698, 73.680310]
+    };
+
+ 
+
+    // Order of stops (for route line)
+    const stopOrder = [
+      "SRM college circle - 9:00 AM",
+      "Police Station",
+      "Ambedkar Chowk - 9:05 AM",
+      "Gulmohar Hotel - 9:06 AM",
+      "Belnadi - 9:07 AM",
+      "Pawshi - 9:09 AM",
+      "Bambarde - 9:12 AM",
+      "Pandur",
+      "Jijamata - 9:17 AM",
+      "Oros Stand - 9:40 AM",
+      "ZP office - 9:41 AM",
+      "Padte Dukan - 9:45 AM",
+      "Sukalwad - 9:47 AM",
+      "MITM - 9:55 AM"
+    ];
+
+ //Map setup (focused on travel area)
+    const map = L.map("map", {
+      minZoom: 12,
+      maxZoom: 17
+    }).setView([16.05, 73.70], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+  
+
+    // Draw route polyline
+    const routeCoords = stopOrder.map(stop => stops[stop]);
+    L.polyline(routeCoords, { color: 'blue', weight: 2 }).addTo(map);
+
+    // Add stop markers
+    stopOrder.forEach(stop => {
+      L.circleMarker(stops[stop], {
+        radius: 5,
+        color: 'red',
+        fillColor: 'white',
+        fillOpacity: 1
+      }).addTo(map).bindPopup(stop);
+    });
+
+
+    // Bus marker
+    let busMarker = null;
+
+    firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
+      const stop = snapshot.val();
+      if (stop && stops[stop]) {
+        const coords = stops[stop];
+        if (busMarker) {
+          busMarker.setLatLng(coords);
+        } else {
+          busMarker = L.marker(coords, {
+            icon: L.divIcon({ className: "bus-icon", html: "🚌", iconSize: [30, 30] })
+          }).addTo(map);
+        }
+   map.setView(coords, 14);
+      }
+ 
+    });
+    
+  </script>
+</body>
+</html>

@@ -134,8 +134,10 @@
         color: 'red',
         fillColor: 'white',
         fillOpacity: 1
-      }).addTo(map).bindPopup(stop);
-    });
+      })  .addTo(map)
+  .bindTooltip(stop, { permanent: true, direction: 'right', offset: [8, 0] }) // always visible
+  .openTooltip();
+});
 
 
     // Bus marker
@@ -160,4 +162,5 @@
   </script>
 </body>
 </html>
+
 

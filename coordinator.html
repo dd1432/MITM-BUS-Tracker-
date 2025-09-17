@@ -15,18 +15,23 @@
       margin-bottom: 10px;
     }
     h1 { color: #003366; }
-    select, button {
-      margin: 10px;
-      padding: 10px;
+
+    .stop-btn {
+      display: block;
+      margin: 10px auto;
+      padding: 15px;
+      width: 90%;
       font-size: 16px;
       border-radius: 8px;
       border: 1px solid #003366;
-    }
-    button {
-      background: #003366;
-      color: white;
-	
+      background: white;
       cursor: pointer;
+    }
+
+    .stop-btn.active {
+      background: pink;
+      color: #000;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -36,26 +41,9 @@
     <h1>MITM College Bus Coordinator</h1>
   </header>
 
-  <p>Update the bus stop when bus reaches.</p>
+  <p>Click on the stop when the bus reaches:</p>
 
-  <select id="stopSelect">
-    <option>Not Started Yet</option>
-    <option>SRM college circle - 9:00 AM</option>
-    <option>Police Station</option>
-    <option>Ambedkar Chowk - 9:05 AM</option>
-    <option>Gulmohar Hotel - 9:06 AM</option>
-    <option>Belnadi - 9:07 AM</option>
-    <option>Pawshi - 9:09 AM</option>
-    <option>Bambarde - 9:12 AM</option>
-    <option>Pandur</option>
-    <option>Jijamata - 9:17 AM</option>
-    <option>Oros Stand - 9:40 AM</option>
-    <option>ZP office - 9:41 AM</option>
-    <option>Padte Dukan - 9:45 AM</option>
-    <option>Sukalwad - 9:47 AM</option>
-    <option>MITM - 9:55 AM</option>
-  </select>
-  <button onclick="updateStop()">Update</button>
+  <div id="stopsContainer"></div>
 
   <!-- Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -73,10 +61,42 @@
     };
     firebase.initializeApp(firebaseConfig);
 
-    function updateStop() {
-      const stop = document.getElementById("stopSelect").value;
-      firebase.database().ref("bus/currentStop").set(stop);
-    }
+    const stops = [
+      "Not Started Yet",
+      "SRM college circle - 9:00 AM",
+      "Police Station",
+      "Ambedkar Chowk - 9:05 AM",
+      "Gulmohar Hotel - 9:06 AM",
+      "Belnadi - 9:07 AM",
+      "Pawshi - 9:09 AM",
+      "Bambarde - 9:12 AM",
+      "Pandur",
+      "Jijamata - 9:17 AM",
+      "Oros Stand - 9:40 AM",
+      "ZP office - 9:41 AM",
+      "Padte Dukan - 9:45 AM",
+      "Sukalwad - 9:47 AM",
+      "MITM - 9:55 AM"
+    ];
+
+    const container = document.getElementById("stopsContainer");
+
+    stops.forEach((stop, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = stop;
+      btn.className = "stop-btn";
+      btn.onclick = () => {
+        // Update Firebase
+        firebase.database().ref("bus/currentStop").set(stop);
+
+        // Reset all buttons
+        document.querySelectorAll(".stop-btn").forEach(b => b.classList.remove("active"));
+
+        // Highlight current button
+        btn.classList.add("active");
+      };
+      container.appendChild(btn);
+    });
   </script>
 </body>
 </html>

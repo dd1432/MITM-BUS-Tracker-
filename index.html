@@ -43,7 +43,7 @@
   }
     .stop-label {
   opacity: 0.5;       /* makes text transparent */
-  font-size: 12px;    /* adjust size */
+  font-size: 20px;    /* adjust size */
   font-weight: bold;  /* optional */
   background: none;   /* removes white background */
   border: none;       /* removes border */
@@ -84,40 +84,62 @@
     // Stops with coordinates
     const stops = {
       "Not Started Yet": null,
-      "SRM college circle - 9:00 AM": [16.002758, 73.690182],
-      "Police Station": [16.005456, 73.687071],
-      "Ambedkar Chowk - 9:05 AM": [16.013139, 73.685517],
-      "Gulmohar Hotel - 9:06 AM": [16.015775, 73.690378],
-      "Belnadi - 9:07 AM": [16.017020, 73.695487],
-      "Pawshi - 9:09 AM": [16.028396, 73.699633],
-      "Bambarde - 9:12 AM": [16.048672, 73.705323],
-      "Pandur": [16.068645, 73.709111],
-      "Jijamata - 9:17 AM": [16.103614, 73.708746],
-      "Oros Stand - 9:40 AM": [16.117025, 73.703931],
-      "ZP office - 9:41 AM": [16.114360, 73.698258],
-      "Padte Dukan - 9:45 AM": [16.113896, 73.672320],
-      "Sukalwad - 9:47 AM": [16.109731, 73.666286],
-      "MITM - 9:55 AM": [16.105698, 73.680310]
+     "SRM college circle": 	[16.002758, 73.690182],
+      	"Police Station": 	[16.005456, 73.687071],
+	"Kudal stand": 		[16.011947, 73.685343],
+      	"Ambedkar Chowk": 	[16.013139, 73.685517],
+      	"Gulmohar Hotel": 	[16.015775, 73.690378],
+	"Kudal depo": 		[16.013343, 73.695591],
+      	"Belnadi": 		[16.017020, 73.695487],
+      	"Pawshi": 		[16.028396, 73.699633],
+      	"Bambarde": 		[16.048672, 73.705323],
+      	"Pandur": 		[16.068645, 73.709111],
+      	"Humarmala": 		[16.083216, 73.708097],
+      	"Rane stop": 		[16.095384, 73.706193],
+      	"Jijamata": 		[16.103614, 73.708746],
+      	"Oros Phata": 		[16.116860, 73.706823],
+      	"Oros Stand": 		[16.117025, 73.703931],
+      	"Don Bosco": 		[16.118202, 73.701144],
+      	"ZP office": 		[16.114360, 73.698258],
+      	"Hospital": 		[16.118509, 73.690214],
+      	"Rly stn": 		[16.117822, 73.680650],
+      	"ranbambuli phata": 	[16.120040, 73.675369],
+      	"Padte Dukan": 		[16.113896, 73.672320],
+      	"Sukalwad": 		[16.109731, 73.666286],
+      	"talavde phata": 	[16.108777, 73.665233],
+      	"Rly phatak": 		[16.105701, 73.679265],
+      	"MITM": 		[16.105698, 73.680310]
     };
 
  
 
     // Order of stops (for route line)
     const stopOrder = [
-      "SRM college circle - 9:00 AM",
+      "SRM college circle",
       "Police Station",
-      "Ambedkar Chowk - 9:05 AM",
-      "Gulmohar Hotel - 9:06 AM",
-      "Belnadi - 9:07 AM",
-      "Pawshi - 9:09 AM",
-      "Bambarde - 9:12 AM",
+	"Kudal stand",
+      "Ambedkar Chowk",
+      "Gulmohar Hotel",
+	"Kudal depo",
+      "Belnadi",
+      "Pawshi",
+      "Bambarde",
       "Pandur",
-      "Jijamata - 9:17 AM",
-      "Oros Stand - 9:40 AM",
-      "ZP office - 9:41 AM",
-      "Padte Dukan - 9:45 AM",
-      "Sukalwad - 9:47 AM",
-      "MITM - 9:55 AM"
+	"Humarmala",
+      	"Rane stop",
+      "Jijamata",
+	"Oros Phata",
+      "Oros Stand",
+      "ZP office",
+	"Hospital",
+      	"Rly stn",
+      	"ranbambuli phata",
+      "Padte Dukan",
+      "Sukalwad",
+	"talavde phata",
+      	"Rly phatak",
+      "MITM"
+
     ];
 
  //Map setup (focused on travel area)
@@ -187,6 +209,7 @@ firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
   </script>
 </body>
 </html>
+
 
 
 

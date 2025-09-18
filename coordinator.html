@@ -75,20 +75,30 @@
 
     const stops = [
       "Not Started Yet",
-      "SRM college circle - 9:00 AM",
+      "SRM college circle",
       "Police Station",
-      "Ambedkar Chowk - 9:05 AM",
-      "Gulmohar Hotel - 9:06 AM",
-      "Belnadi - 9:07 AM",
-      "Pawshi - 9:09 AM",
-      "Bambarde - 9:12 AM",
+	"Kudal stand",
+      "Ambedkar Chowk",
+      "Gulmohar Hotel",
+	"Kudal depo",
+      "Belnadi",
+      "Pawshi",
+      "Bambarde",
       "Pandur",
-      "Jijamata - 9:17 AM",
-      "Oros Stand - 9:40 AM",
-      "ZP office - 9:41 AM",
-      "Padte Dukan - 9:45 AM",
-      "Sukalwad - 9:47 AM",
-      "MITM - 9:55 AM"
+	"Humarmala",
+      	"Rane stop",
+      "Jijamata",
+	"Oros Phata",
+      "Oros Stand",
+      "ZP office",
+	"Hospital",
+      	"Rly stn",
+      	"ranbambuli phata",
+      "Padte Dukan",
+      "Sukalwad",
+	"talavde phata",
+      	"Rly phatak",
+      "MITM"
     ];
 
     const container = document.getElementById("stopsContainer");
@@ -110,8 +120,49 @@
       container.appendChild(btn);
     });
   </script>
+	<button id="prevStop">⬅ Previous</button>
+<button id="nextStop">Next ➡</button>
+
+<script>
+  let currentIndex = 0;
+
+  document.getElementById("prevStop").addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      firebase.database().ref("bus/currentStop").set(stops[currentIndex]);
+
+      // Highlight the active stop button
+      document.querySelectorAll(".stop-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".stop-btn")[currentIndex].classList.add("active");
+    }
+  });
+
+  document.getElementById("nextStop").addEventListener("click", () => {
+    if (currentIndex < stops.length - 1) {
+      currentIndex++;
+      firebase.database().ref("bus/currentStop").set(stops[currentIndex]);
+
+      // Highlight the active stop button
+      document.querySelectorAll(".stop-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".stop-btn")[currentIndex].classList.add("active");
+    }
+  });
+
+  // Keep currentIndex in sync with Firebase
+  firebase.database().ref("bus/currentStop").on("value", (snapshot) => {
+    const stop = snapshot.val();
+    currentIndex = stops.indexOf(stop);
+
+    // Highlight button
+    if (currentIndex >= 0) {
+      document.querySelectorAll(".stop-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".stop-btn")[currentIndex].classList.add("active");
+    }
+  });
+</script>
 </body>
 </html>
+
 
 
 
